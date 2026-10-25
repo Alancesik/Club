@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="cs" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOCTURNO | Club & Shisha Lounge</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Space Grotesk (nadpisy) & Outfit (běžný text) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Konfigurace vlastních barev a fontů pro Tailwind -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        night: {
+                            950: '#040209',
+                            900: '#0a0514',
+                            800: '#130924',
+                        },
+                        neon: {
+                            magenta: '#ff007f',
+                            purple: '#9d4edd',
+                            cyan: '#00f0ff',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Vlastní CSS pro neonovou atmosféru, mřížku a skleněné efekty -->
+    <style>
+        body {
+            background-color: #040209;
+            color: #f1f5f9;
+            overflow-x: hidden;
+        }
+
+        /* Jemná futuristická mřížka na pozadí */
+        .bg-cyber-grid {
+            background-size: 45px 45px;
+            background-image: 
+                linear-gradient(to right, rgba(157, 78, 221, 0.06) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 240, 255, 0.06) 1px, transparent 1px);
+        }
+
+        /* Neonové záření textu */
+        .text-glow-magenta {
+            text-shadow: 0 0 15px rgba(255, 0, 127, 0.6), 0 0 35px rgba(255, 0, 127, 0.3);
+        }
+        
+        .text-glow-cyan {
+            text-shadow: 0 0 15px rgba(0, 240, 255, 0.6), 0 0 35px rgba(0, 240, 255, 0.3);
+        }
+
+        /* Neonové rámečky a stíny karet */
+        .box-glow-magenta {
+            box-shadow: 0 0 25px -5px rgba(255, 0, 127, 0.35), inset 0 0 15px -10px rgba(255, 0, 127, 0.3);
+        }
+
+        .box-glow-cyan {
+            box-shadow: 0 0 25px -5px rgba(0, 240, 255, 0.35), inset 0 0 15px -10px rgba(0, 240, 255, 0.3);
+        }
+
+        /* Glassmorphism karty */
+        .glass-panel {
+            background: rgba(19, 9, 36, 0.55);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Pulzující ambientní světla v pozadí */
+        @keyframes pulse-slow {
+            0%, 100% { transform: scale(1) translate(0, 0); opacity: 0.35; }
+            50% { transform: scale(1.15) translate(15px, -15px); opacity: 0.55; }
+        }
+
+        .ambient-orb {
+            animation: pulse-slow 9s ease-in-out infinite;
+            filter: blur(110px);
+            pointer-events: none;
+        }
+
+        /* Vlastní scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #040209;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2e1065;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ff007f;
+        }
+    </style>
+</head>
+<body class="bg-cyber-grid antialiased selection:bg-neon-magenta selection:text-white">
+
+    <!-- Ambientní barevné mlhoviny na pozadí -->
+    <div class="fixed top-[-10%] left-[-10%] w-[450px] h-[450px] rounded-full bg-neon-magenta/25 ambient-orb -z-10"></div>
+    <div class="fixed bottom-[10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-neon-cyan/20 ambient-orb -z-10" style="animation-delay: -4s;"></div>
+    <div class="fixed top-[45%] left-[35%] w-[400px] h-[400px] rounded-full bg-neon-purple/20 ambient-orb -z-10" style="animation-delay: -2s;"></div>
+
+    <!-- NAVIGACE -->
+    <nav class="fixed top-0 left-0 w-full z-50 glass-panel border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Logo -->
+            <a href="#" class="font-display text-2xl sm:text-3xl font-extrabold tracking-wider text-white flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-neon-magenta animate-ping"></span>
+                NOCTURNO
+                <span class="hidden sm:inline-block text-[11px] font-sans font-medium uppercase tracking-widest text-neon-cyan border border-neon-cyan/40 px-2 py-0.5 rounded-full bg-neon-cyan/10">
+                    Club & Shisha
+                </span>
+            </a>
+
+            <!-- Desktop odkazy -->
+            <div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+                <a href="#koncept" class="hover:text-neon-cyan transition">Koncept & Otevírací doba</a>
+                <a href="#sobota" class="hover:text-neon-magenta transition">Sobotní Party</a>
+                <a href="#menu" class="hover:text-neon-cyan transition">Menu & Shisha</a>
+                <a href="#rezervace" class="bg-gradient-to-r from-neon-magenta to-neon-purple hover:from-neon-magenta/90 hover:to-neon-purple/90 text-white font-semibold px-5 py-2.5 rounded-full shadow-lg shadow-neon-magenta/30 transition transform hover:-translate-y-0.5">
+                    Rezervovat stůl
+                </a>
+            </div>
+
+            <!-- Mobilní tlačítko menu -->
+            <button id="mobile-menu-btn" aria-label="Otevřít menu" class="md:hidden text-slate-200 hover:text-neon-cyan focus:outline-none p-2">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Mobilní rozbalovací menu -->
+        <div id="mobile-menu" class="hidden md:hidden glass-panel border-t border-white/10 px-4 pt-3 pb-6 space-y-3">
+            <a href="#koncept" class="mobile-link block py-2 text-base font-medium text-slate-200 hover:text-neon-cyan">Koncept & Otevírací doba</a>
+            <a href="#sobota" class="mobile-link block py-2 text-base font-medium text-slate-200 hover:text-neon-magenta">Sobotní Party (DJ Hovno)</a>
+            <a href="#menu" class="mobile-link block py-2 text-base font-medium text-slate-200 hover:text-neon-cyan">Menu & Shisha</a>
+            <a href="#rezervace" class="mobile-link block text-center mt-4 bg-gradient-to-r from-neon-magenta to-neon-purple text-white font-bold py-3 rounded-xl shadow-lg shadow-neon-magenta/30">
+                Rezervovat stůl
+            </a>
+        </div>
+    </nav>
+
+    <!-- 1. HERO SEKCE -->
+    <header class="relative min-h-screen flex items-center justify-center pt-24 pb-16 px-4 text-center overflow-hidden">
+        <div class="max-w-4xl mx-auto z-10 space-y-8">
+            
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-panel border border-neon-cyan/30 text-neon-cyan text-xs sm:text-sm font-medium tracking-wide uppercase">
+                <span class="w-2 h-2 rounded-full bg-neon-cyan"></span>
+                Dvě tváře noci • Jedno unikátní místo
+            </div>
+
+            <h1 class="font-display text-5xl sm:text-7xl lg:text-8xl font-extrabold tracking-tight leading-none text-white">
+                NOCTURNO
+                <span class="block text-2xl sm:text-4xl lg:text-5xl mt-3 font-bold bg-gradient-to-r from-neon-cyan via-purple-400 to-neon-magenta bg-clip-text text-transparent">
+                    CLUB & SHISHA LOUNGE
+                </span>
+            </h1>
+
+            <p class="max-w-2xl mx-auto text-base sm:text-xl text-slate-300 font-light leading-relaxed">
+                Přes týden intimní futuristická oáza s prémiovými vodními dýmkami a autorskými koktejly. 
+                V sobotu nespoutaná neonová noc plná basů, laserů a čisté energie.
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+                <a href="#rezervace" class="w-full sm:w-auto px-9 py-4 rounded-full bg-neon-magenta hover:bg-pink-600 text-white font-bold text-base sm:text-lg tracking-wide transition transform hover:scale-105 box-glow-magenta">
+                    Rezervovat stůl →
+                </a>
+                <a href="#koncept" class="w-full sm:w-auto px-9 py-4 rounded-full glass-panel hover:border-neon-cyan/60 text-slate-200 hover:text-neon-cyan font-semibold text-base sm:text-lg transition">
+                    Objevit koncept
+                </a>
+            </div>
+
+            <!-- Rychlé info pilulky -->
+            <div class="pt-10 grid grid-cols-3 gap-2 sm:gap-6 max-w-xl mx-auto text-xs sm:text-sm text-slate-400 border-t border-white/10">
+                <div>
+                    <span class="block text-neon-cyan font-bold text-base sm:text-lg">PO – PÁ</span>
+                    Chillout & Shisha
+                </div>
+                <div class="border-x border-white/10 px-2">
+                    <span class="block text-neon-magenta font-bold text-base sm:text-lg">SOBOTA</span>
+                    Rave & DJ Hovno
+                </div>
+                <div>
+                    <span class="block text-slate-500 font-bold text-base sm:text-lg">NEDĚLE</span>
+                    Zavřeno
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 2. KONCEPT A OTEVÍRACÍ DOBA (ROZDĚLENÝ KONCEPT) -->
+    <section id="koncept" class="py-20 sm:py-28 px-4 max-w-7xl mx-auto">
+        <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+            <span class="text-neon-cyan text-xs font-bold uppercase tracking-widest">Rozdělený koncept & Otevírací doba</span>
+            <h2 class="font-display text-3xl sm:text-5xl font-bold text-white">Vyber si svůj rytmus noci</h2>
+            <p class="text-slate-400 text-base sm:text-lg">
+                Nekombinujeme neslučitelné. Každé části týdne dáváme 100% atmosféru – od klidného dýmu v boxech až po sobotní rave pod lasery.
+            </p>
+        </div>
+
+        <div class="grid lg:grid-cols-12 gap-8 items-stretch">
+            
+            <!-- PONDĚLÍ - PÁTEK: CHILLOUT -->
+            <div class="lg:col-span-6 glass-panel rounded-3xl p-8 sm:p-10 border border-neon-cyan/30 box-glow-cyan flex flex-col justify-between relative overflow-hidden group">
+                <div class="absolute -right-12 -top-12 w-40 h-40 bg-neon-cyan/10 rounded-full blur-2xl group-hover:bg-neon-cyan/20 transition"></div>
+                
+                <div class="space-y-6">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <span class="px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-neon-cyan/15 text-neon-cyan border border-neon-cyan/30">
+                            Pondělí – Pátek
+                        </span>
+                        <span class="text-neon-cyan font-display font-bold text-lg">17:00 – 01:00</span>
+                    </div>
+
+                    <h3 class="font-display text-2xl sm:text-4xl font-bold text-white text-glow-cyan">
+                        Chillout, Signature Drinks & Shisha Lounge
+                    </h3>
+
+                    <p class="text-slate-300 leading-relaxed">
+                        Ideální prostor pro večerní relax po práci, rande nebo klidné posezení s přáteli. Tlumené ambientní osvětlení, hluboké kožené sedačky a downtempo / lo-fi house v pozadí, takže si u stolu v klidu popovídáte.
+                    </p>
+
+                    <ul class="space-y-3 text-sm sm:text-base text-slate-200 pt-2">
+                        <li class="flex items-center gap-3">
+                            <span class="w-2 h-2 rounded-full bg-neon-cyan"></span>
+                            Prémiové vodní dýmky (světlé i černé tabáky, HMS, čerstvé ovoce)
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <span class="w-2 h-2 rounded-full bg-neon-cyan"></span>
+                            Molekulární a kouřové signature koktejly
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <span class="w-2 h-2 rounded-full bg-neon-cyan"></span>
+                            Rychlá Wi-Fi, privátní boxy a komorní uvolněná atmosféra
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="pt-8 mt-8 border-t border-white/10 flex items-center justify-between">
+                    <span class="text-xs text-slate-400">Vstup zdarma • Doporučujeme rezervaci dýmky</span>
+                    <a href="#rezervace" class="text-sm font-bold text-neon-cyan hover:underline">Rezervovat lounge →</a>
+                </div>
+            </div>
+
+            <!-- SOBOTA: DIVOKÁ PARTY + DJ HOVNO -->
+            <div id="sobota" class="lg:col-span-6 glass-panel rounded-3xl p-8 sm:p-10 border border-neon-magenta/40 box-glow-magenta flex flex-col justify-between relative overflow-hidden group">
+                <div class="absolute -right-12 -top-12 w-48 h-48 bg-neon-magenta/15 rounded-full blur-2xl group-hover:bg-neon-magenta/25 transition"></div>
+
+                <div class="space-y-6">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <span class="px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-neon-magenta/20 text-neon-magenta border border-neon-magenta/40 animate-pulse">
+                            Sobota • Main Event
+                        </span>
+                        <span class="text-neon-magenta font-display font-bold text-lg">20:00 – 05:00</span>
+                    </div>
+
+                    <h3 class="font-display text-2xl sm:text-4xl font-bold text-white text-glow-magenta">
+                        Divoká Party & Taneční Parket
+                    </h3>
+
+                    <p class="text-slate-300 leading-relaxed">
+                        V sobotu přestavujeme klub na plnohodnotnou rave arénu. Odstraníme stoly z hlavního sálu, spouštíme stropní 3D laserovou klec, CO2 děla a masivní zvukový systém, který rozvibruje podlahu.
+                    </p>
+
+                    <!-- Speciální box pro DJ Hovno -->
+                    <div class="p-5 rounded-2xl bg-gradient-to-r from-neon-magenta/20 via-purple-900/30 to-night-900 border border-neon-magenta/50">
+                        <div class="text-xs uppercase tracking-widest text-neon-magenta font-bold mb-1">
+                            ★ Speciální rezidentní host každou sobotu ★
+                        </div>
+                        <div class="font-display text-2xl sm:text-3xl font-extrabold text-white tracking-wide">
+                            DJ HOVNO <span class="text-sm font-sans font-normal text-slate-300 block sm:inline sm:ml-2">(Exclusive Bass / Tech-House / Hard Groove Set)</span>
+                        </div>
+                        <p class="text-xs sm:text-sm text-slate-300 mt-2">
+                            Nekompromisní drop za dropem od půlnoci až do svítání. Špinavé basové linky, syrová energie a show, na kterou se nezapomíná.
+                        </p>
+                    </div>
+
+                    <ul class="space-y-2.5 text-sm sm:text-base text-slate-200">
+                        <li class="flex items-center gap-3">
+                            <span class="w-2 h-2 rounded-full bg-neon-magenta"></span>
+                            360° RGB laserová show, stroboskopy a mlhové efekty
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <span class="w-2 h-2 rounded-full bg-neon-magenta"></span>
+                            VIP Bottle Service přímo u DJ stage
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="pt-8 mt-8 border-t border-white/10 flex items-center justify-between">
+                    <span class="text-xs text-slate-400">Vstup 18+ • Kapacita parketu omezena</span>
+                    <a href="#rezervace" class="text-sm font-bold text-neon-magenta hover:underline">Chci VIP stůl na sobotu →</a>
+                </div>
+            </div>
+
+            <!-- NEDĚLE: ZAVŘENO -->
+            <div class="lg:col-span-12 glass-panel rounded-2xl p-6 border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+                <div class="flex flex-col sm:flex-row items-center gap-4">
+                    <span class="px-4 py-1.5 rounded-full bg-slate-800 text-slate-400 font-display font-bold text-sm uppercase tracking-wider border border-slate-700">
+                        Neděle: ZAVŘENO
+                    </span>
+                    <p class="text-sm sm:text-base text-slate-400">
+                        V neděli odpočíváme, provádíme kompletní hloubkovou sanitaci vodních dýmek a ladíme světelnou techniku na nový týden.
+                    </p>
+                </div>
+                <span class="text-xs uppercase tracking-widest text-slate-500 font-semibold whitespace-nowrap">
+                    Těšíme se opět v pondělí od 17:00
+                </span>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 3. NABÍDKA (MENU & VIBE) -->
+    <section id="menu" class="py-20 px-4 max-w-7xl mx-auto border-t border-white/10">
+        <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+            <span class="text-neon-magenta text-xs font-bold uppercase tracking-widest">Menu & Vibe</span>
+            <h2 class="font-display text-3xl sm:text-5xl font-bold text-white">Chuť, dým a noční euforie</h2>
+            <p class="text-slate-400 text-base sm:text-lg">
+                Ukázka z našeho nápojového a dýmkového lístku. Vše připravujeme z čerstvých surovin a prémiových tabáků.
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+            
+            <!-- Sloupec 1: Signature Koktejly -->
+            <div class="glass-panel rounded-3xl p-7 border border-white/10 hover:border-neon-cyan/50 transition flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-6">
+                        <span class="text-xs font-bold uppercase tracking-widest text-neon-cyan">01 / Mixologie</span>
+                        <span class="text-2xl">🍸</span>
+                    </div>
+                    <h3 class="font-display text-2xl font-bold text-white mb-6">Signature Koktejly</h3>
+
+                    <div class="space-y-5">
+                        <div class="border-b border-white/10 pb-4">
+                            <div class="flex justify-between font-bold text-white">
+                                <span>Nocturno Eclipse</span>
+                                <span class="text-neon-cyan">210 Kč</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mt-1">Černý gin, ostružinový kordial, limetka, jedlý stříbrný prach a suchý led.</p>
+                        </div>
+
+                        <div class="border-b border-white/10 pb-4">
+                            <div class="flex justify-between font-bold text-white">
+                                <span>Cyberpunk Sour</span>
+                                <span class="text-neon-cyan">225 Kč</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mt-1">Bourbon infuzovaný višněmi, yuzu, dračí ovoce, sametová pěna.</p>
+                        </div>
+
+                        <div class="border-b border-white/10 pb-4">
+                            <div class="flex justify-between font-bold text-white">
+                                <span>Neon Tokyo Mule</span>
+                                <span class="text-neon-cyan">195 Kč</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mt-1">Japonská vodka, modré curaçao, pikantní zázvorové pivo, citronová tráva.</p>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between font-bold text-white">
+                                <span>Virgin Aurora (Nealko)</span>
+                                <span class="text-neon-cyan">145 Kč</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mt-1">Domácí levandulový sirup, růžový grep, tonik, kouřová bublina z rozmarýnu.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-8 pt-4 border-t border-white/5 text-xs text-slate-400">
+                    + kompletní výběr klasických koktejlů a prémiových rumů či ginů.
+                </div>
+            </div>
+
+            <!-- Sloupec 2: Shisha Lounge -->
+            <div class="glass-panel rounded-3xl p-7 border border-white/10 hover:border-purple-400/50 transition flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-6">
+                        <span class="text-xs font-bold uppercase tracking-widest text-purple-400">02 / Hookah</span>
+                        <span class="text-2xl">💨</span>
+                    </div>
+                    <h3 class="font-display text-2xl font-bold text-white mb-6">Shisha Speciály</h3>
+
+                    <div class="space-y-5">
+                        <div class="border-b border-white/10 pb-4">
+                            <div class="flex justify-between font-bold text-white">
+                                <span>Light & Fresh (Světlý tabák)</span>
+                                <span class="text-purple-400">390 Kč</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mt-1">Jemný dým pro pohodový večer. Příchutě: Maracuja-Led, Borůvkový muffin, Liči.</p>
+                        </div>
+
+                        <div class="border-b border-white/10 pb-4">
+                            <div class="flex justify-between font-bold text-white">
+                                <span>Darkside / Musthave (Černý tabák)</span>
+                                <span class="text-purple-400">450 Kč</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mt-1">Silný nikotinový zážitek s plnou chutí: Pinkman, Supernova, Bergamotea, Cola.</p>
+                        </div>
+
+                        <div class="border-b border-white/10 pb-4">
+                            <div class="flex justify-between font-bold text-white">
+                                <span>Nocturno Signature Váza</span>
+                                <span class="text-purple-400">550 Kč</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mt-1">Podsvícená váza s ovocem a ledem, korunka z čerstvého grepu, mix dle tvé chuti.</p>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between font-bold text-white">
+                                <span>Výměna uhlíků & HMS</span>
+                                <span class="text-emerald-400">Zdarma</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mt-1">Náš shisha master se stará o perfektní teplotu dýmky po celou dobu sezení.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-8 pt-4 border-t border-white/5 text-xs text-slate-400">
+                    Používáme výhradně kokosové uhlíky a nerezové dýmky špičkové kvality.
+                </div>
+            </div>
+
+            <!-- Sloupec 3: Sobotní Party Vibe -->
+            <div class="glass-panel rounded-3xl p-7 border border-white/10 hover:border-neon-magenta/50 transition flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-6">
+                        <span class="text-xs font-bold uppercase tracking-widest text-neon-magenta">03 / Saturday Rave</span>
+                        <span class="text-2xl">⚡</span>
+                    </div>
+                    <h3 class="font-display text-2xl font-bold text-white mb-6">Sobotní Party Pack</h3>
+
+                    <div class="space-y-5">
+                        <div class="border-b border-white/10 pb-4">
+                            <div class="flex justify-between font-bold text-white">
+                                <span>Sobotní vstup na parket</span>
+                                <span class="text-neon-magenta">150 Kč</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mt-1">Celonoční maraton s headlinerem <strong>DJ Hovno</strong> + welcome neon shot do 22:00.</p>
+                        </div>
+
+                        <div class="border-b border-white/10 pb-4">
+                            <div class="flex justify-between font-bold text-white">
+                                <span>Party Bucket (6× Red Bull + 0.7l Vodka)</span>
+                                <span class="text-neon-magenta">1 890 Kč</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mt-1">Servírováno v LED chladicím boxu s pyrotechnikou přímo ke stolu.</p>
+                        </div>
+
+                        <div class="border-b border-white/10 pb-4">
+                            <div class="flex justify-between font-bold text-white">
+                                <span>Neon Shooter Tray (10× panák)</span>
+                                <span class="text-neon-magenta">690 Kč</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mt-1">UV svítící shoty v ledu pro celou partu.</p>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between font-bold text-white">
+                                <span>VIP Box u DJ Stage (pro 6 osob)</span>
+                                <span class="text-neon-magenta">3 500 Kč</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mt-1">Celá částka slouží jako konzumace na baru a dýmky + přednostní vstup bez fronty.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-8 pt-4 border-t border-white/5 text-xs text-slate-400">
+                    Sobotní program startuje ve 20:00, hlavní set DJ Hovno od 00:00.
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 4. KONTAKT A REZERVACE -->
+    <section id="rezervace" class="py-20 sm:py-28 px-4 max-w-7xl mx-auto border-t border-white/10">
+        <div class="grid lg:grid-cols-12 gap-12 items-start">
+            
+            <!-- Levý sloupec: Kontaktní údaje -->
+            <div class="lg:col-span-5 space-y-8">
+                <div class="space-y-4">
+                    <span class="text-neon-cyan text-xs font-bold uppercase tracking-widest">Rezervace & Kontakt</span>
+                    <h2 class="font-display text-3xl sm:text-5xl font-bold text-white">Zajisti si svůj stůl včas</h2>
+                    <p class="text-slate-400 leading-relaxed">
+                        Kapacita našich shisha boxů i sobotních VIP stolů na <strong>DJ Hovno</strong> se plní rychle. Rezervaci ti potvrdíme obratem SMS zprávou.
+                    </p>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="glass-panel p-5 rounded-2xl border border-white/10 flex items-start gap-4">
+                        <div class="text-neon-magenta text-xl mt-0.5">📍</div>
+                        <div>
+                            <h3 class="font-bold text-white">Adresa klubu (Fiktivní lokace)</h3>
+                            <p class="text-sm text-slate-300 mt-0.5">Neonová pasáž 404/7, Podzemní patro -1</p>
+                            <p class="text-xs text-slate-400">530 02 Pardubice – Nové Město (ukázková adresa)</p>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel p-5 rounded-2xl border border-white/10 flex items-start gap-4">
+                        <div class="text-neon-cyan text-xl mt-0.5">📞</div>
+                        <div>
+                            <h3 class="font-bold text-white">Rychlá rezervace & Info linka</h3>
+                            <p class="text-sm text-slate-300 mt-0.5">+420 777 000 999 (fiktivní číslo)</p>
+                            <p class="text-xs text-slate-400">rezervace@nocturno-lounge-demo.cz</p>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel p-5 rounded-2xl border border-white/10 flex items-start gap-4">
+                        <div class="text-purple-400 text-xl mt-0.5">🕒</div>
+                        <div class="w-full">
+                            <h3 class="font-bold text-white mb-2">Přehled otevírací doby</h3>
+                            <div class="text-xs sm:text-sm space-y-1 text-slate-300">
+                                <div class="flex justify-between"><span>Pondělí – Pátek (Chillout & Shisha):</span> <span class="text-neon-cyan font-semibold">17:00 – 01:00</span></div>
+                                <div class="flex justify-between"><span>Sobota (Party & DJ Hovno):</span> <span class="text-neon-magenta font-semibold">20:00 – 05:00</span></div>
+                                <div class="flex justify-between text-slate-500"><span>Neděle:</span> <span>Zavřeno</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pravý sloupec: Rezervační formulář -->
+            <div class="lg:col-span-7 glass-panel rounded-3xl p-6 sm:p-10 border border-white/15 shadow-2xl">
+                <h3 class="font-display text-2xl font-bold text-white mb-6">Online rezervace stolu</h3>
+                
+                <form id="reservation-form" class="space-y-5">
+                    <div class="grid sm:grid-cols-2 gap-5">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">Jméno a příjmení *</label>
+                            <input type="text" required placeholder="Jan Novák" class="w-full bg-night-950/90 border border-white/15 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-neon-cyan transition">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">Telefonní číslo *</label>
+                            <input type="tel" required placeholder="+420 777 123 456" class="w-full bg-night-950/90 border border-white/15 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-neon-cyan transition">
+                        </div>
+                    </div>
+
+                    <div class="grid sm:grid-cols-3 gap-5">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">Typ večera *</label>
+                            <select id="vibe-select" required class="w-full bg-night-950/90 border border-white/15 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-neon-cyan transition">
+                                <option value="chillout">Po–Pá: Chillout & Shisha</option>
+                                <option value="party">Sobota: Party (DJ Hovno)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">Datum a čas *</label>
+                            <input type="text" required placeholder="Např. Pátek 20:00" class="w-full bg-night-950/90 border border-white/15 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-neon-cyan transition">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">Počet osob *</label>
+                            <select required class="w-full bg-night-950/90 border border-white/15 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-neon-cyan transition">
+                                <option>2 osoby</option>
+                                <option>3–4 osoby</option>
+                                <option>5–6 osob (Box)</option>
+                                <option>7+ osob (VIP Skupina)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-3 p-3.5 rounded-xl bg-night-950/60 border border-white/10">
+                        <input type="checkbox" id="shisha-check" checked class="w-4 h-4 accent-neon-magenta rounded cursor-pointer">
+                        <label for="shisha-check" class="text-sm text-slate-200 cursor-pointer">
+                            Mám zájem o přípravu vodní dýmky ke stolu
+                        </label>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">Poznámka (oblíbený tabák, oslava narozenin, VIP box)</label>
+                        <textarea rows="3" placeholder="Napište nám své speciální přání..." class="w-full bg-night-950/90 border border-white/15 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-neon-cyan transition"></textarea>
+                    </div>
+
+                    <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-neon-magenta via-purple-600 to-neon-cyan text-white font-display font-bold text-base uppercase tracking-wider shadow-lg shadow-neon-magenta/25 hover:opacity-95 transition transform active:scale-[0.99]">
+                        Odeslat nezávaznou rezervaci
+                    </button>
+
+                    <!-- Potvrzovací hláška po odeslání (demo) -->
+                    <div id="form-success" class="hidden p-4 rounded-xl bg-emerald-500/15 border border-emerald-400/40 text-emerald-300 text-sm text-center">
+                        ✓ Ukázková rezervace byla úspěšně otestována! (Jelikož jde o fiktivní demo projekt, žádná data nebyla nikam odeslána.)
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 5. ZÁPATÍ A POVINNÁ PRÁVNÍ FIKTIVNÍ DOLOŽKA (DISCLAIMER) -->
+    <footer class="border-t border-white/10 bg-night-950 pt-12 pb-10 px-4">
+        <div class="max-w-7xl mx-auto space-y-8">
+            
+            <!-- Výrazný box s právní doložkou o fiktivním projektu -->
+            <div class="p-6 rounded-2xl bg-amber-500/10 border-2 border-amber-400/50 text-center sm:text-left flex flex-col sm:flex-row items-center gap-4 justify-between">
+                <div class="space-y-1">
+                    <div class="inline-flex items-center gap-2 text-amber-300 font-display font-bold text-sm uppercase tracking-wider">
+                        ⚠️ Právní doložka / Disclaimer (Fiktivní projekt)
+                    </div>
+                    <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">
+                        Tento web je <strong>pouze zkušební, prezentační a fiktivní ukázkový projekt</strong> vytvořený pro účely webdesignového portfolia. 
+                        Podnik <strong>„NOCTURNO Club & Shisha Lounge“</strong> ve skutečnosti neexistuje, neprovozuje žádnou živnost, nepřijímá reálné objednávky a veškeré uvedené adresy, kontakty, ceny i program (včetně vystoupení DJ Hovno) jsou zcela smyšlené.
+                    </p>
+                </div>
+                <span class="px-4 py-2 rounded-lg bg-amber-400/20 text-amber-300 font-mono text-xs font-bold whitespace-nowrap border border-amber-400/30">
+                    DEMO / UKÁZKOVÝ WEB
+                </span>
+            </div>
+
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 pt-4 border-t border-white/5">
+                <div class="font-display font-bold text-slate-300 tracking-wider">
+                    NOCTURNO <span class="text-neon-magenta">•</span> CLUB & SHISHA LOUNGE
+                </div>
+                <div>
+                    © 2026 Ukázkový projekt. Vytvořeno jako moderní dark-mode šablona.
+                </div>
+            </div>
+
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT: Mobilní menu a obsluha demo formuláře -->
+    <script>
+        // Ovládání mobilního menu
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // Obsluha rezervačního formuláře
+        const form = document.getElementById('reservation-form');
+        const successMsg = document.getElementById('form-success');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            successMsg.classList.remove('hidden');
+            form.reset();
+            setTimeout(() => {
+                successMsg.classList.add('hidden');
+            }, 7000);
+        });
+    </script>
+</body>
+</html>
