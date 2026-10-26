@@ -1,13 +1,65 @@
 <!DOCTYPE html>
 <html lang="cs" class="scroll-smooth">
-<head> <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-1Q69XF11WH"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+<head><!-- Jednoduchá Cookie Lišta -->
+<div id="cookie-banner" style="display: none; position: fixed; bottom: 0; left: 0; right: 0; background: #111827; color: #f3f4f6; padding: 16px 24px; z-index: 9999; box-shadow: 0 -4px 12px rgba(0,0,0,0.3); font-family: sans-serif; font-size: 14px; border-top: 1px solid #374151;">
+  <div style="max-width: 1100px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px;">
+    <p style="margin: 0; line-height: 1.5; flex: 1 1 300px;">
+      Tento web používá soubory cookies a nástroj Google Analytics k analýze návštěvnosti, abychom mohli zlepšovat naše služby. Tento web je fiktivní/testovací projekt.
+    </p>
+    <div style="display: flex; gap: 10px;">
+      <button id="cookie-reject" style="background: transparent; color: #9ca3af; border: 1px solid #4b5563; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 13px;">
+        Odmítnout
+      </button>
+      <button id="cookie-accept" style="background: #2563eb; color: #ffffff; border: none; padding: 8px 18px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px;">
+        Rozumím a přijímám
+      </button>
+    </div>
+  </div>
+</div>
 
-  gtag('config', 'G-1Q69XF11WH');
+<script>
+  // ZDE NAHRAĎ SVÝM REÁLNÝM MĚŘICÍM ID:
+  const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX';
+
+  // Funkce, která načte Google Analytics až po udělení souhlasu
+  function loadGoogleAnalytics() {
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
+    document.head.appendChild(script);
+
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', GA_MEASUREMENT_ID);
+  }
+
+  // Kontrola předchozí volby návštěvníka
+  const consent = localStorage.getItem('cookie_consent');
+  const banner = document.getElementById('cookie-banner');
+
+  if (consent === 'granted') {
+    // Uživatel už dříve souhlasil -> rovnou měříme
+    loadGoogleAnalytics();
+  } else if (consent === 'denied') {
+    // Uživatel dříve odmítl -> neděláme nic, lištu nezobrazujeme
+  } else {
+    // Uživatel je tu poprvé -> zobrazíme lištu
+    banner.style.display = 'block';
+  }
+
+  // Tlačítko Přijmout
+  document.getElementById('cookie-accept').addEventListener('click', function() {
+    localStorage.setItem('cookie_consent', 'granted');
+    banner.style.display = 'none';
+    loadGoogleAnalytics();
+  });
+
+  // Tlačítko Odmítnout
+  document.getElementById('cookie-reject').addEventListener('click', function() {
+    localStorage.setItem('cookie_consent', 'denied');
+    banner.style.display = 'none';
+  });
 </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
